@@ -8,8 +8,8 @@ Gestion de tickets d’incidents
 Déplacez vous dans le répertoire racine et lancez ces commandes :
 
 ```shell
-python manage.py migrate  
 python manage.py makemigrations
+python manage.py migrate  
 python manage.py runserver      
 ```
 

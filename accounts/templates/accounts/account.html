@@ -1,0 +1,105 @@
+{% extends "base/header.html" %}
+
+<!doctype html>
+<html lang="fr">
+
+{% block title %}
+<ul class="navbar-nav">
+  <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+    <h1 class="welcome-text">Bienvenue, <span class="text-black fw-bold">{{ user.username }}</span></h1>
+    <h3 class="welcome-sub-text">Mon Compte</h3>
+  </li>
+</ul>
+{% endblock %}
+
+{% block body %}
+<div class="content-wrapper">
+  <form class="forms-sample" method = "POST" action="{% url 'myaccount' %}">
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Mes informations personnelles</h4>
+            <p class="card-description">
+              Mon compte
+            </p>
+            
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="exampleInputUsername1">Nom d'utilisateur</label>
+                <input type="text" class="form-control" required="required" name="username" id="exampleInputUsername1" value={{ username }} placeholder={{ username }}>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Adresse e-mail</label>
+                <input type="email" class="form-control" required="required" name="email" id="exampleInputEmail1" value={{ email }} placeholder={{ email }}>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Nouveau mot de passe</label>
+                <input type="password" name="password1" class="form-control" id="exampleInputPassword1" placeholder="Nouveau mot de passe">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputConfirmPassword1">Confirmer le nouveau mot de passe</label>
+                <input type="password" name="password2" class="form-control" id="exampleInputConfirmPassword1" placeholder="Confirmer le nouveau mot de passe">
+              </div>
+              
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Mes connections externes</h4>
+            <p class="card-description">
+              API
+            </p>
+              <img class="img-sm rounded-10" src="../../static/base/images/exchange/ftx_logo-freelogovectors.net_.png" alt="profile">
+              <div class="form-group">
+                <label for="exampleInputUsername1">Clé API</label>
+                {% if FTXKey == 0 %}
+                <input type="text" class="form-control" min=40 name="APIKey"placeholder="API Key">
+                {% else %}
+                <input type="text" class="form-control" min=40 name="APIKey" value={{ FTXKey }}>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">API Secret</label>
+                {% if FTXKey == 0 %}
+                <input type="password" class="form-control" name="APISecret" placeholder="API Secret">
+                {% else %}
+                <input type="password" class="form-control" name="APISecret" value={{ FTXSecret }}>
+                {% endif %}
+              </div>
+              <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-4 stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="exampleInputPassword1">Mot de passe</label>
+              <input type="password" name="password3" required="required" class="form-control" id="exampleInputPassword1" placeholder="Mot de passe">
+              {% if status == 1 %}
+                <p class="text-danger">{{ error }}</p>
+              {% endif %}
+            </div>
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary me-2">Sauvegarder</button>
+              </div>
+              <div class="d-flex justify-content-center">
+                <a href="/accounts/myaccount" class="btn btn-light">Annuler</a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+      
+  </form>
+    
+  </div>
+
+
+{% endblock %}

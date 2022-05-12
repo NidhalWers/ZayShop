@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base',
+    'accounts',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
