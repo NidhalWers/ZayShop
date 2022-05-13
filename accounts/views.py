@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from django.contrib import auth
 from django.shortcuts import render
-from accounts.models import APIKey
 from django.contrib.auth.hashers import check_password
 import random
 
@@ -85,52 +84,24 @@ def myaccount(request):
                             U.set_password(request.POST['password1'])
                             U.save()
                         else :
-                            FTXKey,FTXSecret,username,email = ReloadInfo(request)
+                            username,email = ReloadInfo(request)
                      
-                            return render (request,'accounts/account.html', {'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'error':'Mots de passe différents!','status':1})
+                            return render (request,'accounts/account.html', {'username':username,'email':email,'error':'Mots de passe différents!','status':1})
                     else:
                         User.objects.filter(username=request.user.username,email=request.user.email).update(username=request.POST['username'],email = request.POST['email'])
                 except:
-                    FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                    return render (request,'accounts/account.html', {'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'error':'Impossible de modifier les infos!','status':1})
+                    username,email = ReloadInfo(request)
+                    return render (request,'accounts/account.html', {'username':username,'email':email,'error':'Impossible de modifier les infos!','status':1})
                 
-                if request.POST['APIKey'] or request.POST['APISecret']:
-                    try:
-                        APIKey.objects.get(user = request.user,exchange = 'FTX')
-                        APIKey.objects.filter(user=request.user,exchange = 'FTX').update(apiKey=request.POST['APIKey'],apiKeySecret = request.POST['APISecret'])
-                        FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                        return render (request,'accounts/account.html', {'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'success':'Clé API modifiée','status':0})
-                    except APIKey.DoesNotExist:
-                        try:
-                            apiKey = APIKey(exchange = 'FTX',apiKey=request.POST['APIKey'],apiKeySecret = request.POST['APISecret'],user=request.user)
-                            apiKey.save()
-
-                            FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                            return render (request,'accounts/account.html',{'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'success':'Clé API ajouté','status':0})
-                        except:
-                            FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                            return render (request, 'accounts/account.html',{'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'error':'Erreur lors de la clé API','status':1})
-
-                else:
-                    FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                    return render (request,'accounts/account.html',{'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'success':'Informations modifées','status':0})
             else:
-                FTXKey,FTXSecret,username,email = ReloadInfo(request)
-                return render(request, 'accounts/account.html',{'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'error':'Mot de passe incorrect','status':1})
+                username,email = ReloadInfo(request)
+                return render(request, 'accounts/account.html',{'username':username,'email':email,'error':'Mot de passe incorrect','status':1})
 
         else:
-            FTXKey,FTXSecret,username,email = ReloadInfo(request)
-            return render(request, 'accounts/account.html',{'FTXKey':FTXKey,'FTXSecret':FTXSecret,'username':username,'email':email,'status':0})
+            username,email = ReloadInfo(request)
+            return render(request, 'accounts/account.html',{'username':username,'email':email,'status':0})
 
 def ReloadInfo(request):
-    try:
-        APIKey.objects.get(user = request.user,exchange = 'FTX')
-        APIFTX = APIKey.objects.filter(user = request.user,exchange = 'FTX')
-        FTXKey = APIFTX[0].apiKey
-        FTXSecret = APIFTX[0].apiKeySecret
-    except APIKey.DoesNotExist:
-        FTXKey = 0
-        FTXSecret = 0
     try:
         username= request.user.username
         email= request.user.email
@@ -138,7 +109,7 @@ def ReloadInfo(request):
         username = "nom d'utilisateur"
         email = "Email"
 
-    return FTXKey,FTXSecret,username,email
+    return username,email
 
 def recuperation(request):
     if request.method == "POST":
