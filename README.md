@@ -13,3 +13,7 @@ python manage.py migrate
 python manage.py runserver      
 ```
 
+# Data
+
+https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset
+
