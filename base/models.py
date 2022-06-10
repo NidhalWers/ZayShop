@@ -1,4 +1,6 @@
+import json
 from django.db import models
+from rest_framework import serializers
 
 # Create your models here.
 class Product(models.Model):
@@ -7,7 +9,7 @@ class Product(models.Model):
     masterCategory = models.TextField(default='')
     subCategory = models.TextField(default='')
     articleType = models.TextField(default='')
-    baseColor = models.TextField(default='')
+    baseColour = models.TextField(default='')
     season = models.TextField(default='')
     year = models.IntegerField(default=0)
     usage = models.TextField(default='')

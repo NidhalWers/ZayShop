@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <a href="shop-single.html" class="h3 text-decoration-none">[[ product.productDisplayName ]] </a>
+                                <a v-bind:href="product.id" class="h3 text-decoration-none">[[ product.productDisplayName ]] </a>
                                 <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                     <li>M/L/X/XL</li>
                                     <li class="pt-2">
@@ -173,15 +173,15 @@
                 </div>
                 <div div="row">
                     <ul class="pagination pagination-lg justify-content-end">
-                        <li class="page-item disabled">
-                            <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabindex="-1">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="#">3</a>
-                        </li>
+                        <div v-for="page in pages.nbPage" :key="pages.nbPage">
+                            <li v-if="page == currentPage" class="page-item disabled">
+                                <a  class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" tabindex="-1">[[ page ]]</a>
+                            </li>
+                            <li v-if="page != currentPage && page < currentPage + 3 && page != 0" class="page-item">
+                                <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" v-on:click="getProductsByPage(page)" href="#">[[ page ]]</a>
+                            </li>  
+                        </div>
+                        ...[[ pages.maxPage ]]
                     </ul>
                 </div>
             </div>
@@ -305,17 +305,25 @@
       data () {
           return{
             products: {},
+            pages: {},
+            currentPage:1,
           }
         },
       async mounted() {
           await this.getProductsByPage(1)
+          await this.getNumberPage()
       },
       methods: {
         getProductsByPage: async function(page){
           await axios
             .get('api/getProductsByPage/'+page)
             .then(response => (this.products = response.data))
-            console.log(this.products)
+            this.currentPage = page
+        },
+        getNumberPage: async function(){
+          await axios
+            .get('api/getNumberPages')
+            .then(response => (this.pages = response.data))
         },
       },
     })

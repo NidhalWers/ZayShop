@@ -1,0 +1,178 @@
+{% extends "base/header.html" %}
+
+{% block body %}
+{% load static %}
+    <!-- Modal -->
+    <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="w-100 pt-1 mb-5 text-right">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="get" class="modal-content modal-body border-0 p-0">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
+                    <button type="submit" class="input-group-text bg-success text-light">
+                        <i class="fa fa-fw fa-search text-white"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <!-- Open Content -->
+    <section class="bg-light">
+        <div id="elem" class="container pb-5">
+            <div class="row">
+                <div class="col-lg-5 mt-5">
+                    <div class="card mb-3">
+                        <img class="card-img img-fluid" src="{{ product.link }}" alt="Card image cap" id="product-detail">
+                    </div>
+                </div>
+                <!-- col end -->
+                <div class="col-lg-7 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="h2">{{ product.productDisplayName }}</h1>
+                            <p class="h3 py-2">{{ product.price }}€</p>
+                            <p class="py-2">
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-secondary"></i>
+                                <span class="list-inline-item text-dark">Rating 4.8 | 36 Comments</span>
+                            </p>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Gender:</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p class="text-muted"><strong>{{ product.gender }}</strong></p>
+                                </li>
+                            </ul>
+
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Season :</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p class="text-muted"><strong>{{ product.season }}</strong></p>
+                                </li>
+                            </ul>
+
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <h6>Color :</h6>
+                                </li>
+                                <li class="list-inline-item">
+                                    <p class="text-muted"><strong>{{ product.baseColour }}</strong></p>
+                                </li>
+                            </ul>
+
+                            <h6>Specification:</h6>
+                            <ul class="list-unstyled pb-3">
+                                <li>{{ product.masterCategory }}</li>
+                                <li>{{ product.subCategory }}</li>
+                                <li>{{ product.articleType }}</li>
+                                <li>{{ product.usage }}</li>
+                                <li>{{ product.year }}</li>
+                            </ul>
+
+                                <input type="hidden" name="product-title" value="Activewear">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <ul class="list-inline pb-3">
+                                            <li class="list-inline-item">Size :
+                                                <input type="hidden" name="product-size" id="product-size">
+                                            </li>
+                                            {% if typ == 'footwear' %}
+                                            <li class="list-inline-item"><span v-on:click="changeSize('38')" class="btn btn-success btn-size">38</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('39')" class="btn btn-success btn-size">39</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('40')" class="btn btn-success btn-size">40</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('41')" class="btn btn-success btn-size">41</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('42')" class="btn btn-success btn-size">42</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('43')" class="btn btn-success btn-size">43</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('44')" class="btn btn-success btn-size">44</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('45')" class="btn btn-success btn-size">45</span></li>
+                                            {% endif %}
+                                            {% if typ == 'apparel' %}
+                                            <li class="list-inline-item"><span v-on:click="changeSize('S')" class="btn btn-success btn-size">S</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('M')" class="btn btn-success btn-size">M</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('L')" class="btn btn-success btn-size">L</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('XL')" class="btn btn-success btn-size">XL</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('XXL')" class="btn btn-success btn-size">XXL</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    <div class="col-auto">
+                                        <ul class="list-inline pb-3">
+                                            <li class="list-inline-item text-right">
+                                                Quantity
+                                            </li>
+                                            <li class="list-inline-item"><span v-on:click="decrement()" class="btn btn-success" id="btn-minus">-</span></li>
+                                            <li class="list-inline-item"><span class="badge bg-secondary">[[ quantity ]]</span></li>
+                                            <li class="list-inline-item"><span v-on:click="increment()" class="btn btn-success" id="btn-plus">+</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col d-grid">
+                                        <button class="btn btn-success btn-lg" value="buy">Buy</button>
+                                    </div>
+                                    <div class="col d-grid">
+                                        <button v-on:click="addToCart({{ product.id }}, size, quantity)" class="btn btn-success btn-lg" value="addtocard">Add To Cart</button>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Close Content -->
+
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var balance = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#elem',
+      data () {
+          return{
+              error:'None',
+              size:'None',
+              quantity:1
+          }
+        },
+      async mounted() {
+      },
+      methods: {
+        addToCart: async function(id,s,q){
+            if (s == 'None'){
+                alert('Veuillez choisir une taille')
+            }else{
+          await axios
+            .get('/api/addToCart/'+id+'/'+s+'/'+q)
+            .then(response => (this.error = response.data))
+            alert('Produit ajouté au panier, taille : '+s+' quantité : '+q)
+            }
+        },
+        increment: async function(){
+          this.quantity++
+        },
+        decrement: async function(){
+          this.quantity--
+        },
+        changeSize: async function(s){
+          this.size=s
+        },
+      },
+    })
+    </script>
+
+
+    {% endblock %}

@@ -29,12 +29,12 @@ class UserAdmin(ImportExportModelAdmin):
 class FootwearRessource(resources.ModelResource):
     class Meta:
         model = Footwear
-        fields = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link','stock38','stock39','stock40','stock41','stock42','stock43','stock44','stock45')
+        fields = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link','stock38','stock39','stock40','stock41','stock42','stock43','stock44','stock45')
 
 class FootwearAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
     resource_class = FootwearRessource
     # Other admin definition here
-    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link','stock38','stock39','stock40','stock41','stock42','stock43','stock44','stock45')
+    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link','stock38','stock39','stock40','stock41','stock42','stock43','stock44','stock45')
     # list_filter = ('created_at',)
     resource_class = FootwearRessource
     pass
@@ -42,12 +42,12 @@ class FootwearAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
 class ApparelRessource(resources.ModelResource):
     class Meta:
         model = Apparel
-        fields = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link','stocks','stockm','stockl','stockxl','stockxxl')
+        fields = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link','stocks','stockm','stockl','stockxl','stockxxl')
 
 class ApparelAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
     resource_class = ApparelRessource
     # Other admin definition here
-    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link','stocks','stockm','stockl','stockxl','stockxxl')
+    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link','stocks','stockm','stockl','stockxl','stockxxl')
     # list_filter = ('created_at',)
     resource_class = ApparelRessource
     pass
@@ -55,12 +55,12 @@ class ApparelAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
 class ProductRessource(resources.ModelResource):
     class Meta:
         model = Product
-        fields = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link')
+        fields = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link')
 
 class ProductAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
     resource_class = ProductRessource
     # Other admin definition here
-    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColor','season','year','usage','productDisplayName','price','link')
+    list_display = ('id','gender','masterCategory','subCategory','articleType','baseColour','season','year','usage','productDisplayName','price','link')
     # list_filter = ('created_at',)
     resource_class = ProductRessource
     pass

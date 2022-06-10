@@ -76,7 +76,7 @@ https://templatemo.com/tm-559-zay-shop
                         </li>
                     </ul>
                 </div>
-                <div class="navbar align-self-center d-flex">
+                <div id="navProd" class="navbar align-self-center d-flex">
                     <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
                         <div class="input-group">
                             <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
@@ -88,12 +88,15 @@ https://templatemo.com/tm-559-zay-shop
                     <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
                         <i class="fa fa-fw fa-search text-dark mr-2"></i>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="/cart/mycart">
+                    <a class="nav-icon position-relative text-decoration-none" href="/cart">
                         <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
+                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">[[ number.nbElm ]]</span>
                     </a>
                     <a class="nav-icon position-relative text-decoration-none" href="/accounts/myaccount">
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
+                        {% if user.is_authenticated %}
+                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">{{ user.username }}</span>
+                        {% endif %}
                     </a>
                 </div>
             </div>
@@ -203,7 +206,34 @@ https://templatemo.com/tm-559-zay-shop
     <script src="{% static 'base/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'base/js/templatemo.js' %}"></script>
     <script src="{% static 'base/js/custom.js' %}"></script>
+
     <!-- End Script -->
 </body>
 
 </html>
+
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var balance = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#navProd',
+      data () {
+          return{
+              number:0
+          }
+        },
+        mounted() {
+          this.getNumberCartElm()
+      },
+      methods: {
+        getNumberCartElm: async function(id){
+          await axios
+            .get('api/getNumberCartElm')
+            .then(response => (this.number = response.data))
+        },
+      },
+    })
+    </script>
