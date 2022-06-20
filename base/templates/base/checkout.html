@@ -1,0 +1,167 @@
+
+{% extends "base/header.html" %}
+
+<!doctype html>
+<html lang="fr">
+{% block body %}
+<br>
+    <div id="element" class="row col-md-10 justify-content-center">
+        <div class="col-md-2 order-md-2 mb-2">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Votre panier</span>
+            <span class="badge badge-secondary badge-pill">3</span>
+        </h4>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">Montant du panier</h6>
+                <small class="text-muted">[[ number.nbElm ]] articles</small>
+            </div>
+            <span class="text-muted">[[ totalPrice ]]€</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between bg-light">
+            <div class="text-success">
+                <h6 class="my-0">Code de réduction</h6>
+                <small>Aucun</small>
+            </div>
+            <span class="text-success">-0€</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+            <span>Total (EUR)</span>
+            <strong>[[ totalPrice ]]€</strong>
+            </li>
+        </ul>
+
+        <form class="card p-2">
+            <div class="input-group">
+            <input type="text" class="form-control" placeholder="Promo code">
+            <div class="input-group-append">
+                <button class="btn btn-secondary">Appliquer</button>
+            </div>
+            </div>
+        </form>
+        </div>
+        <div class="col-md-10 order-md-1">
+            <form class="col-md-9 m-auto" method = "POST" action="{% url 'checkout' %}">
+                <div class="row justify-content-center">
+                  <div class="col-md-8 grid-margin stretch-card">
+                        <h4 class="card-title">Paiment</h4>
+                        <p class="card-description">
+                          Adresse de livraison
+                        </p>
+                          {% csrf_token %}
+                          <div class="form-group">
+                            <label for="exampleInputUsername1">Adresse</label>
+                            <input type="text" class="form-control mt-1" required="required" name="adress" id="exampleInputUsername1">
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="exampleInputEmail1">Ville</label>
+                                <input type="text" class="form-control mt-1" required="required" name="city" id="exampleInputEmail1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="exampleInputPassword1">Code postal</label>
+                                <input type="text" name="zipcode" class="form-control mt-1" id="exampleInputPassword1" >
+                            </div>
+                        </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="same-address">
+                            <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+                          </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="save-info">
+                            <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                          </div>
+                      </div>
+                </div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 grid-margin stretch-card">
+                        <p class="card-description">
+                            informations bancaire
+                          </p>
+                          <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="exampleInputPassword1">Nom du titulaire de la carte</label>
+                                    <input type="text" required="required" class="form-control mt-1" id="exampleInputPassword1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="exampleInputPassword1">N° de la carte de crédit</label>
+                                    <input type="text" required="required" class="form-control mt-1" id="exampleInputPassword1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="exampleInputPassword1">Date d'expiration</label>
+                                    <input type="date" required="required" class="form-control mt-1" id="exampleInputPassword1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="exampleInputPassword1">Cryptogramme visuel</label>
+                                    <input type="numeric" required="required" class="form-control mt-1" id="exampleInputPassword1">
+                                </div>
+                            </div>
+                            {% if status == 1 %}
+                              <p class="text-danger">{{ error }}</p>
+                            {% endif %}
+                            <br>
+                          </div>
+                            <div class="d-flex justify-content-center">
+                              <button type="submit" class="btn btn-success">Payer</button>
+                            </div>
+                    </div>
+                  </div>
+                <br>
+                  
+              </form>
+        </div>
+  </div>
+
+  <!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var balance = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#element',
+      data () {
+          return{
+              cart:'None',
+              totalPrice :0,
+              number:0,
+          }
+        },
+      async mounted() {
+        await this.getNumberCartElm()
+        await this.getCart()
+        await this.getPrice()
+      },
+      async updated() {
+        this.getPrice()
+      },
+      methods: {
+        getCart: async function(){
+          await axios
+            .get('api/getCart')
+            .then(response => (this.cart = response.data))
+        },
+        getPrice: async function(){
+          price = 0
+          this.cart.cart.forEach(element => {
+            price+=element.price
+          })
+          this.totalPrice = price
+        },
+        getNumberCartElm: async function(id){
+          await axios
+            .get('api/getNumberCartElm')
+            .then(response => (this.number = response.data))
+        },
+      },
+    })
+    </script>
+
+
+  {% endblock %}

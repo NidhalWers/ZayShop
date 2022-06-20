@@ -87,21 +87,21 @@
                                                 <input type="hidden" name="product-size" id="product-size">
                                             </li>
                                             {% if typ == 'footwear' %}
-                                            <li class="list-inline-item"><span v-on:click="changeSize('38')" class="btn btn-success btn-size">38</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('39')" class="btn btn-success btn-size">39</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('40')" class="btn btn-success btn-size">40</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('41')" class="btn btn-success btn-size">41</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('42')" class="btn btn-success btn-size">42</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('43')" class="btn btn-success btn-size">43</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('44')" class="btn btn-success btn-size">44</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('45')" class="btn btn-success btn-size">45</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('38')" class="btn btn-success btn-size">38 ({{ product.stock38 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('39')" class="btn btn-success btn-size">39 ({{ product.stock39 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('40')" class="btn btn-success btn-size">40 ({{ product.stock40 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('41')" class="btn btn-success btn-size">41 ({{ product.stock41 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('42')" class="btn btn-success btn-size">42 ({{ product.stock42 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('43')" class="btn btn-success btn-size">43 ({{ product.stock43 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('44')" class="btn btn-success btn-size">44 ({{ product.stock44 }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('45')" class="btn btn-success btn-size">45 ({{ product.stock45 }})</span></li>
                                             {% endif %}
                                             {% if typ == 'apparel' %}
-                                            <li class="list-inline-item"><span v-on:click="changeSize('S')" class="btn btn-success btn-size">S</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('M')" class="btn btn-success btn-size">M</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('L')" class="btn btn-success btn-size">L</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('XL')" class="btn btn-success btn-size">XL</span></li>
-                                            <li class="list-inline-item"><span v-on:click="changeSize('XXL')" class="btn btn-success btn-size">XXL</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('S')" class="btn btn-success btn-size">S ({{ product.stocks }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('M')" class="btn btn-success btn-size">M ({{ product.stockm }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('L')" class="btn btn-success btn-size">L ({{ product.stockl }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('XL')" class="btn btn-success btn-size">XL ({{ product.stockxl }})</span></li>
+                                            <li class="list-inline-item"><span v-on:click="changeSize('XXL')" class="btn btn-success btn-size">XXL ({{ product.stockxxl }})</span></li>
                                             {% endif %}
                                         </ul>
                                     </div>
@@ -145,7 +145,8 @@
           return{
               error:'None',
               size:'None',
-              quantity:1
+              quantity:1,
+              checkStockVar:{error:0}
           }
         },
       async mounted() {
@@ -154,12 +155,19 @@
         addToCart: async function(id,s,q){
             if (s == 'None'){
                 alert('Veuillez choisir une taille')
-            }else{
-          await axios
-            .get('/api/addToCart/'+id+'/'+s+'/'+q)
-            .then(response => (this.error = response.data))
-            alert('Produit ajouté au panier, taille : '+s+' quantité : '+q)
             }
+            else{
+                await this.checkStock(id,s,q)
+                if(this.checkStockVar.error==0){
+                    await axios
+                    .get('/api/addToCart/'+id+'/'+s+'/'+q)
+                    .then(response => (this.error = response.data))
+                    alert('Produit ajouté au panier, taille : '+s+' quantité : '+q)
+                }
+                else{
+                    alert(this.checkStockVar.error)
+                }
+            }     
         },
         increment: async function(){
           this.quantity++
@@ -169,6 +177,11 @@
         },
         changeSize: async function(s){
           this.size=s
+        },
+        checkStock: async function(id,size,quantity){
+          await axios
+            .get('api/checkStock/'+id+'/'+size+'/'+quantity)
+            .then(response => (this.checkStockVar = response.data))
         },
       },
     })

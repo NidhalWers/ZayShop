@@ -1,0 +1,110 @@
+
+{% extends "base/header.html" %}
+
+<!doctype html>
+<html lang="fr">
+{% block body %}
+
+<section class="h-100 gradient-custom">
+    <div id="element" class="container py-5">
+      <div class="row d-flex justify-content-center my-4">
+        <div class="col-md-12">
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <h5 class="mb-0">[[ orders.number ]] Commandes</h5>
+            </div>
+            <div class="card-body" v-for="elem in orders.orders">
+                <!-- Single item -->
+                <div class="row">
+    
+                  <div class="col-lg-10 col-md-10 mb-10 mb-lg-10">
+                    <!-- Data -->
+                    <p><strong>[[ elem.date ]]</strong></p>
+                    <p>Status: [[ elem.status ]]</p>
+                    <p>Adresse: [[ elem.adress ]], [[ elem.city ]] [[ elem.zip ]]</p>
+                    <div class="card-body" v-for="article in elem.products">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                              <!-- Image -->
+                              <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                <img v-bind:src="article.link"
+                                  class="w-100" />
+                                <a href="#!">
+                                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                </a>
+                              </div>
+                              <!-- Image -->
+                            </div>
+              
+                            <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                              <!-- Data -->
+                              <p><strong>[[ article.name ]]</strong></p>
+                              <p>Color: [[ article.baseColour ]]</p>
+                              <p>Size: [[ article.size ]] </p>
+                              <p>x[[ article.quantity ]] </p>
+                              <!-- Data -->
+                            </div>
+              
+                            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+
+                              <!-- Price -->
+                              <p class="text-start text-md-center">
+                                <strong>[[ article.price ]]€</strong>
+                              </p>
+                              <!-- Price -->
+                            </div>
+                          </div>
+                    </div>
+                    <!-- Data -->
+                  </div>
+    
+                  <div class="col-lg-2 col-md-2 mb-2 mb-lg-2">
+                    <!-- Price -->
+                    <p class="text-start text-md-center">
+                      <strong>[[ elem.total ]]€</strong>
+                    </p>
+                    <!-- Price -->
+                  </div>
+                </div>
+                <!-- Single item -->
+    
+                <hr class="my-4" />
+  
+                <!-- Single item -->
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var balance = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#element',
+      data () {
+          return{
+            orders:[]
+          }
+        },
+      async mounted() {
+        await this.getOrders()
+      },
+      async updated() {
+      },
+      methods: {
+        getOrders: async function(){
+          await axios
+            .get('api/getHistoricalOrders')
+            .then(response => (this.orders = response.data))
+        },
+      },
+    })
+    </script>
+
+
+  {% endblock %}

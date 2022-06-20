@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Zay analyse</title>
+    <!-- Pignose Calender -->
+    <link href="{% static 'analyse/plugins/pg-calendar/css/pignose.calendar.min.css' %}" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="{% static 'analyse/plugins/chartist/css/chartist.min.css' %}">
+    <link rel="stylesheet" href="{% static 'analyse/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css' %}">
+    <!-- Custom Stylesheet -->
+    <link href="{% static 'analyse/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div id="element">
+
+            <div class="container-fluid mt-3">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-1">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total des commandes</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">[[ totalOrder.total_order ]]</h2>
+                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-2">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Profit total</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">[[ totalSales.total_sales ]]€</h2>
+                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-3">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total utilisateurs</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">[[ totalUsers.number_users ]]</h2>
+                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-4">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Produits vendue</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">[[ totalProduct.number_products_sold ]]</h2>
+                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Simple line chart</h4>
+                                <div id="simple-line-chart" class="ct-chart ct-golden-section"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card card-widget">
+                            <div class="card-body">
+                                <h5 class="text-muted">Répartition des ventes</h5>
+                                <h2 class="mt-4">2</h2>
+                                <span>Total des ventes</span>
+                                <div class="mt-4">
+                                    <h4>[[ repartition.footwear_nb ]]</h4>
+                                    <h6>Footwear <span class="pull-right">[[ repartition.pourcentage_footwear ]]%</span></h6>
+                                    <div class="progress mb-3" style="height: 7px">
+                                        <div class="progress-bar gradient-1" :style="{ width: repartition.pourcentage_footwear + '%'} " role="progressbar"><span class="sr-only">[[ repartition.pourcentage_footwear ]]% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <h4>[[ repartition.apparel_nb ]]</h4>
+                                    <h6 class="m-t-10 text-muted">Apparel <span class="pull-right">[[ repartition.pourcentage_apparel ]]%</span></h6>
+                                    <div class="progress mb-3" style="height: 7px">
+                                        <div class="progress-bar gradient-3" :style="{ width: repartition.pourcentage_apparel + '%'} " role="progressbar"><span class="sr-only">[[ repartition.pourcentage_apparel ]]% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="mt-4">
+                                    <h4>5,250</h4>
+                                    <h6 class="m-t-10 text-muted">Budget Pending <span class="pull-right">70%</span></h6>
+                                    <div class="progress mb-3" style="height: 7px">
+                                        <div class="progress-bar gradient-8" style="width: 70%;" role="progressbar"><span class="sr-only">70% Complete</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+*
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <script src="{% static 'analyse/plugins/common/common.min.js' %}"></script>
+    <script src="{% static 'analyse/js/custom.min.js' %}"></script>
+    <script src="{% static 'analyse/js/settings.js' %}"></script>
+    <script src="{% static 'analyse/js/gleek.js' %}"></script>
+    <script src="{% static 'analyse/js/styleSwitcher.js' %}"></script>
+
+    <!-- Chartjs -->
+    <script src="{% static 'analyse/plugins/chart.js/Chart.bundle.min.js' %}"></script>
+    <!-- Circle progress -->
+    <script src="{% static 'analyse/plugins/circle-progress/circle-progress.min.js' %}"></script>
+    <!-- Datamap -->
+    <script src="{% static 'analyse/plugins/d3v3/index.js' %}"></script>
+    <script src="{% static 'analyse/plugins/topojson/topojson.min.js' %}"></script>
+    <script src="{% static 'analyse/plugins/datamaps/datamaps.world.min.js' %}"></script>
+    <!-- Morrisjs -->
+    <script src="{% static 'analyse/plugins/raphael/raphael.min.js' %}"></script>
+    <script src="{% static 'analyse/plugins/morris/morris.min.js' %}"></script>
+    <!-- Pignose Calender -->
+    <script src="{% static 'analyse/plugins/moment/moment.min.js' %}"></script>
+    <script src="{% static 'analyse/plugins/pg-calendar/js/pignose.calendar.min.js' %}"></script>
+    <!-- ChartistJS -->
+    <script src="{% static 'analyse/plugins/chartist/js/chartist.min.js' %}"></script>
+    <script src="{% static 'analyse/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js' %}"></script>
+
+
+
+    <script src="{% static 'analyse/js/dashboard/dashboard-1.js' %}"></script>
+  <!-- vue:js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+  <!-- axios:js -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- jquery:js -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script>
+      var balance = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#element',
+        data () {
+            return{
+                totalOrder:0,
+                totalSales:0,
+                totalProduct:0,
+                totalUsers:0,
+                repartition:{}
+            }
+          },
+        async mounted() {
+          await this.getNumberOrder()
+          await this.getSales()
+          await this.getProduct()
+          await this.getUser()
+        },
+        async updated() {
+        },
+        methods: {
+            getNumberOrder: async function(){
+            await axios
+              .get('api/totalOrder')
+              .then(response => (this.totalOrder = response.data))
+          },
+          getSales: async function(){
+            await axios
+              .get('api/totalSales')
+              .then(response => (this.totalSales = response.data))
+          },
+          getProduct: async function(){
+            await axios
+              .get('api/totalProduct')
+              .then(response => (this.totalProduct = response.data))
+          },
+          getUser: async function(){
+            await axios
+              .get('api/totalUser')
+              .then(response => (this.totalUsers = response.data))
+          },
+          getUser: async function(){
+            await axios
+              .get('api/salesRepartition')
+              .then(response => (this.repartition = response.data))
+          },
+        },
+      })
+      </script>
+  
+</body>
+
+</html>

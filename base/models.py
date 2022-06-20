@@ -37,3 +37,17 @@ class Apparel(Product):
     stockxl = models.IntegerField(default=0)
     stockxxl = models.IntegerField(default=0)
 
+class Order(models.Model):
+    id = models.IntegerField(primary_key=True)
+    user = models.TextField(default='')
+    date = models.TextField(default='')
+    total = models.IntegerField(default=0)
+    status = models.TextField(default='')
+    products = models.TextField(default='')
+    city = models.TextField(default='')
+    adress = models.TextField(default='')
+    zip = models.IntegerField(default=0)
+    paiement = models.TextField(default='')
+    def __str__(self):
+        return self.user
+

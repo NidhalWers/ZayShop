@@ -11,7 +11,7 @@
         <div class="col-md-8">
           <div class="card mb-4">
             <div class="card-header py-3">
-              <h5 class="mb-0">Cart - 2 items</h5>
+              <h5 class="mb-0">Cart - [[ number.nbElm ]] items</h5>
             </div>
             <div class="card-body" v-for="elem in cart.cart">
               <!-- Single item -->
@@ -33,7 +33,7 @@
                   <p><strong>[[ elem.name ]]</strong></p>
                   <p>Color: [[ elem.baseColour ]]</p>
                   <p>Size: [[ elem.size ]] </p>
-                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+                  <button type="button" v-on:click="removeProduct(elem.id)" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
                     title="Remove item">
                     <i class="fas fa-trash"></i>
                   </button>
@@ -47,7 +47,7 @@
                 <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                   <!-- Quantity -->
                   <div class="d-flex mb-4" style="max-width: 300px">
-                    <input type="number" class="form-control mt-1" required="required" name="username" id="exampleInputUsername1" v-bind:value="elem.quantity">
+                    <input type="number" disabled class="form-control mt-1" required="required" name="username" id="exampleInputUsername1" v-bind:value="elem.quantity">
                   </div>
                   <!-- Quantity -->
   
@@ -113,13 +113,16 @@
                       <p class="mb-0">(including VAT)</p>
                     </strong>
                   </div>
-                  <span><strong>$53.98</strong></span>
+                  <span><strong>[[ totalPrice ]]€</strong></span>
                 </li>
               </ul>
   
-              <button type="button" class="btn btn-success">
-                Go to checkout
-              </button>
+              <a v-if="number.nbElm == 0" type="button" class="btn btn-secondary">
+                Go to checkout 
+              </a>
+              <a v-if="number.nbElm > 0" type="button" href="/checkout" class="btn btn-success" >
+                Go to checkout 
+              </a>
             </div>
           </div>
         </div>
@@ -138,14 +141,17 @@
       data () {
           return{
               cart:'None',
-              totalPrice :0
+              totalPrice :0,
+              number:0,
           }
         },
       async mounted() {
+        await this.getNumberCartElm()
         await this.getCart()
         await this.getPrice()
       },
       async updated() {
+        this.getPrice()
       },
       methods: {
         getCart: async function(){
@@ -159,6 +165,16 @@
             price+=element.price
           })
           this.totalPrice = price
+        },
+        removeProduct: async function(id){
+          await axios
+            .get('api/removeProductCart/'+id)
+            .then(response => (this.cart = response.data))
+        },
+        getNumberCartElm: async function(id){
+          await axios
+            .get('api/getNumberCartElm')
+            .then(response => (this.number = response.data))
         },
       },
     })
