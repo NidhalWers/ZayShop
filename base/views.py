@@ -64,6 +64,9 @@ def success(request):
 def order(request):
     return render(request, 'base/order.html')
 
+def about(request):
+    return render(request, 'base/about.html')
+
 # Utils
 
 def number_pages():

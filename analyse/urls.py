@@ -9,4 +9,6 @@ urlpatterns = [
     path('api/totalProduct', views.get_number_products_sold, name='get_number_products_sold'),
     path('api/totalUser', views.get_number_users, name='get_number_users'),
     path('api/salesRepartition', views.get_sales_repartitions, name='get_sales_repartitions'),
+    path('api/lastOrders', views.get_last_5_orders, name='get_last_5_orders'),
+    path('api/getSalesByDay', views.get_sales_by_day, name='get_sales_by_day'),
 ]

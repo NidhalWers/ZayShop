@@ -94,13 +94,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Simple line chart</h4>
-                                <div id="simple-line-chart" class="ct-chart ct-golden-section"></div>
-                            </div>
-                        </div>
+                    <div class="col-12">
+                            <canvas id="lineChart"></canvas>
                     </div>
                 </div>
                 <div class="row">
@@ -136,6 +131,39 @@
                                 </div> -->
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <h4>Table Hover</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Nombre d'éléments</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Prix</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="order in lastOrders.orders" :key="order.id">
+                                                <th>[[order.id]]</th>
+                                                <td>[[order.products]]</td>
+                                                <td><span class="badge badge-primary px-2">[[order.status]]</span>
+                                                </td>
+                                                <td>[[order.date]]</td>
+                                                <td class="color-primary">[[order.total]]€</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# card -->
                     </div>
                 </div>
             </div>
@@ -196,7 +224,9 @@
                 totalSales:0,
                 totalProduct:0,
                 totalUsers:0,
-                repartition:{}
+                repartition:{},
+                lastOrders:{},
+                salesByDay:{},
             }
           },
         async mounted() {
@@ -204,6 +234,10 @@
           await this.getSales()
           await this.getProduct()
           await this.getUser()
+          await this.getLastOrders()
+          await this.getRepartitions()
+          
+          await this.getSalesByDay()
         },
         async updated() {
         },
@@ -228,10 +262,46 @@
               .get('api/totalUser')
               .then(response => (this.totalUsers = response.data))
           },
-          getUser: async function(){
+          getRepartitions: async function(){
             await axios
               .get('api/salesRepartition')
               .then(response => (this.repartition = response.data))
+          },
+          getSalesByDay: async function(){
+            await axios
+              .get('api/getSalesByDay')
+              .then(response => (this.salesByDay = response.data))
+              await this.getChart(this.salesByDay)
+          },
+          getLastOrders: async function(){
+            await axios
+              .get('api/lastOrders')
+              .then(response => (this.lastOrders = response.data))
+          },
+          getChart: async function(sales){
+            //line
+  var ctxL = document.getElementById("lineChart").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: sales.dates,
+      datasets: [{
+          label: "Evolution des ventes",
+          data: sales.sales,
+          backgroundColor: [
+            'rgba(105, 0, 132, .2)',
+          ],
+          borderColor: [
+            'rgba(200, 99, 132, .7)',
+          ],
+          borderWidth: 2
+        },
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  });
           },
         },
       })
